@@ -15,6 +15,22 @@
 
 ## 快速开始
 
+### 一键安装
+
+```bash
+# 默认从 GitHub Releases 下载
+bash <(curl -sL https://raw.githubusercontent.com/dong94771157/ldplane/master/install.sh)
+
+# 使用自定义下载域名（国内镜像加速）
+bash <(curl -sL https://raw.githubusercontent.com/dong94771157/ldplane/master/install.sh) https://your-mirror.com/ldplane
+
+# 或通过环境变量指定
+export DOWNLOAD_BASE=https://your-mirror.com/ldplane
+bash <(curl -sL https://raw.githubusercontent.com/dong94771157/ldplane/master/install.sh)
+```
+
+> 下载源优先级：命令行参数 > 环境变量 `DOWNLOAD_BASE` > 默认 GitHub Releases
+
 ### 下载二进制
 
 从 [Releases](../../releases) 页面下载对应架构的二进制文件：

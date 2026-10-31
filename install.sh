@@ -1,14 +1,32 @@
 #!/bin/bash
 # 琳东linux管理面板 一键安装脚本
-# 用法: curl -fsSL https://raw.githubusercontent.com/ldplane/ldplane/main/install.sh | bash
+#
+# 用法:
+#   1. 默认(GitHub下载):  curl -fsSL https://raw.githubusercontent.com/dong94771157/ldplane/master/install.sh | bash
+#   2. 自定义下载域名:    curl -fsSL https://raw.githubusercontent.com/dong94771157/ldplane/master/install.sh | bash -s -- https://www.ldnet.tech/dl
+#   3. 环境变量方式:      DOWNLOAD_BASE=https://www.ldnet.tech/dl bash install.sh
+#
+# 自定义域名目录下需放置以下文件:
+#   ldplane-linux-amd64  (x86_64架构二进制)
+#   ldplane-linux-arm64  (arm64架构二进制)
 
 set -e
 
 REPO="dong94771157/ldplane"
+DEFAULT_BASE="https://github.com/${REPO}/releases/latest/download"
 INSTALL_DIR="/usr/local/bin"
 CONFIG_DIR="/etc/ldplane"
 SERVICE_FILE="/etc/systemd/system/ldplane.service"
 PORT=8888
+
+# 下载域名: 优先级 命令行参数 > 环境变量 > 默认GitHub
+if [ -n "$1" ]; then
+    DOWNLOAD_BASE="$1"
+elif [ -n "$DOWNLOAD_BASE" ]; then
+    DOWNLOAD_BASE="$DOWNLOAD_BASE"
+else
+    DOWNLOAD_BASE="$DEFAULT_BASE"
+fi
 
 # 检查 root
 if [ "$(id -u)" != "0" ]; then
@@ -32,11 +50,12 @@ echo "  琳东linux管理面板 - 一键安装"
 echo "========================================"
 echo "架构: $ARCH"
 echo "二进制: $BINARY"
+echo "下载源: $DOWNLOAD_BASE"
 echo ""
 
 # 下载最新版本
 echo "[1/5] 下载 琳东linux管理面板 ..."
-DOWNLOAD_URL="https://github.com/${REPO}/releases/latest/download/${BINARY}"
+DOWNLOAD_URL="${DOWNLOAD_BASE}/${BINARY}"
 if command -v wget &> /dev/null; then
     wget -q --show-progress -O "${INSTALL_DIR}/ldplane" "$DOWNLOAD_URL"
 elif command -v curl &> /dev/null; then
