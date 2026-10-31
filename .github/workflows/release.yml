@@ -42,3 +42,36 @@ jobs:
             dist/ldplane-linux-amd64
             dist/ldplane-linux-arm64
             dist/checksums.txt
+
+      - name: Generate version.json
+        run: |
+          cat > dist/version.json << EOF
+          {
+            "version": "${GITHUB_REF_NAME#v}",
+            "date": "$(date +%Y-%m-%d)",
+            "changelog": [
+              "新增软件商店：支持 MySQL/Redis/PostgreSQL/MongoDB 等数据库一键安装",
+              "新增在线更新：设置页可检查并一键更新到最新版本",
+              "新增 Docker 支持：提供 Dockerfile，支持容器化部署",
+              "优化界面与交互体验"
+            ],
+            "downloads": {
+              "amd64": "https://mb.ldnet.tech/ldplane-linux-amd64",
+              "arm64": "https://mb.ldnet.tech/ldplane-linux-arm64"
+            }
+          }
+          EOF
+
+      - name: Upload to R2
+        continue-on-error: true
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          R2_ACCOUNT_ID: ${{ secrets.R2_ACCOUNT_ID }}
+          R2_BUCKET: lindong-ssh
+        run: |
+          pip install awscli
+          ENDPOINT="https://${R2_ACCOUNT_ID}.r2.cloudflarestorage.com"
+          aws s3 cp dist/ldplane-linux-amd64 s3://${R2_BUCKET}/ldplane-linux-amd64 --endpoint-url ${ENDPOINT}
+          aws s3 cp dist/ldplane-linux-arm64 s3://${R2_BUCKET}/ldplane-linux-arm64 --endpoint-url ${ENDPOINT}
+          aws s3 cp dist/version.json s3://${R2_BUCKET}/version.json --endpoint-url ${ENDPOINT} --content-type application/json

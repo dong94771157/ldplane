@@ -94,7 +94,8 @@ function switchPage(page) {
     const loaders = {
         dashboard: () => { loadDashboard(); dashboardTimer = setInterval(loadDashboard, 5000); },
         site: loadSites, file: () => loadFiles(currentPath), service: loadServices,
-        firewall: loadFirewall, process: loadProcess, terminal: initTerminal, settings: () => {}, about: () => {}
+        firewall: loadFirewall, process: loadProcess, terminal: initTerminal,
+        store: loadStore, settings: loadSettingsPage, about: () => {}
     };
     if (loaders[page]) loaders[page]();
 }
@@ -503,6 +504,109 @@ function changePassword() {
             document.getElementById('confirm-password').value = '';
         }
     });
+}
+
+// ==================== 软件商店 ====================
+let storeCategory = '';
+
+function filterStore(cat) {
+    storeCategory = cat;
+    document.querySelectorAll('.store-tabs .btn').forEach(btn => {
+        btn.className = 'btn btn-sm ' + (btn.dataset.cat === cat ? 'btn-primary' : 'btn-outline');
+    });
+    loadStore();
+}
+
+function loadStore() {
+    api('/api/store/list?category=' + storeCategory).then(res => {
+        if (res.code !== 0) return;
+        const grid = document.getElementById('store-grid');
+        grid.innerHTML = res.data.map(s => {
+            const catName = {database:'数据库',web:'Web服务',runtime:'运行时',tool:'工具'}[s.category] || s.category;
+            let statusHtml, actionHtml;
+            if (s.installing) {
+                statusHtml = '<span class="badge badge-warning">安装中...</span>';
+                actionHtml = '<button class="btn btn-sm" disabled>处理中</button>';
+            } else if (s.installed) {
+                statusHtml = s.active ? '<span class="badge badge-success">运行中</span>' : '<span class="badge badge-info">已安装</span>';
+                actionHtml = '<button class="btn btn-sm btn-danger" onclick="uninstallSoft(\'' + s.pkg + '\')">卸载</button>';
+            } else {
+                statusHtml = '<span class="badge badge-warning">未安装</span>';
+                actionHtml = '<button class="btn btn-sm btn-primary" onclick="installSoft(\'' + s.pkg + '\')">安装</button>';
+            }
+            return '<div class="store-card">' +
+                '<div class="store-card-header">' +
+                    '<div><span class="store-card-name">' + escapeHtml(s.name) + '</span><span class="store-card-ver">v' + escapeHtml(s.version) + '</span></div>' +
+                    '<span class="store-cat-tag ' + s.category + '">' + catName + '</span>' +
+                '</div>' +
+                '<div class="store-card-desc">' + escapeHtml(s.description) + '</div>' +
+                '<div class="store-card-footer">' + statusHtml + actionHtml + '</div>' +
+            '</div>';
+        }).join('');
+    });
+}
+
+function installSoft(pkg) {
+    if (!confirm('确定安装该软件？安装将在后台执行。')) return;
+    api('/api/store/install', { method: 'POST', body: JSON.stringify({ pkg }) }).then(res => {
+        toast(res.msg, res.code === 0 ? 'success' : 'error');
+        if (res.code === 0) setTimeout(loadStore, 1000);
+    });
+}
+
+function uninstallSoft(pkg) {
+    if (!confirm('确定卸载该软件？相关数据将丢失！')) return;
+    api('/api/store/uninstall', { method: 'POST', body: JSON.stringify({ pkg }) }).then(res => {
+        toast(res.msg, res.code === 0 ? 'success' : 'error');
+        if (res.code === 0) loadStore();
+    });
+}
+
+// ==================== 系统更新 ====================
+function loadSettingsPage() {
+    api('/api/version').then(res => {
+        if (res.code === 0) document.getElementById('current-version').textContent = 'v' + res.data.version;
+    });
+}
+
+function checkUpdate() {
+    toast('正在检查更新...');
+    api('/api/update/check').then(res => {
+        if (res.code !== 0) { toast(res.msg || '检查失败', 'error'); return; }
+        const d = res.data;
+        document.getElementById('current-version').textContent = 'v' + d.current_version;
+        if (d.error) {
+            document.getElementById('latest-version').textContent = '获取失败';
+            toast(d.error, 'error');
+            return;
+        }
+        document.getElementById('latest-version').textContent = 'v' + d.latest_version;
+        const changelogEl = document.getElementById('update-changelog');
+        const applyBtn = document.getElementById('btn-apply-update');
+        if (d.has_update) {
+            changelogEl.style.display = 'block';
+            changelogEl.innerHTML = '<strong>更新内容 (v' + d.latest_version + '):</strong><ul>' +
+                (d.changelog || []).map(c => '<li>' + escapeHtml(c) + '</li>').join('') + '</ul>';
+            applyBtn.style.display = 'inline-block';
+            toast('发现新版本 v' + d.latest_version, 'success');
+        } else {
+            changelogEl.style.display = 'none';
+            applyBtn.style.display = 'none';
+            toast('当前已是最新版本');
+        }
+    }).catch(() => toast('网络错误', 'error'));
+}
+
+function applyUpdate() {
+    if (!confirm('确定更新到最新版本？更新期间服务将短暂重启。')) return;
+    toast('正在下载更新，请勿关闭页面...');
+    api('/api/update/apply', { method: 'POST' }).then(res => {
+        toast(res.msg, res.code === 0 ? 'success' : 'error');
+        if (res.code === 0) {
+            document.getElementById('btn-apply-update').style.display = 'none';
+            setTimeout(() => { location.reload(); }, 8000);
+        }
+    }).catch(() => toast('更新失败', 'error'));
 }
 
 // ==================== 初始化 ====================

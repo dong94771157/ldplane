@@ -42,6 +42,9 @@
                 <a class="nav-item" data-page="service" onclick="switchPage('service')">
                     <span class="nav-icon">◉</span> 服务管理
                 </a>
+                <a class="nav-item" data-page="store" onclick="switchPage('store')">
+                    <span class="nav-icon">⊞</span> 软件商店
+                </a>
                 <a class="nav-item" data-page="firewall" onclick="switchPage('firewall')">
                     <span class="nav-icon">⛉</span> 防火墙
                 </a>
@@ -151,6 +154,21 @@
                 </div>
             </div>
 
+            <!-- 软件商店 -->
+            <div id="page-store" class="page" style="display:none">
+                <div class="page-header">
+                    <h2 class="page-title">软件商店</h2>
+                    <div class="store-tabs">
+                        <button class="btn btn-sm btn-primary" data-cat="" onclick="filterStore('')">全部</button>
+                        <button class="btn btn-sm btn-outline" data-cat="database" onclick="filterStore('database')">数据库</button>
+                        <button class="btn btn-sm btn-outline" data-cat="web" onclick="filterStore('web')">Web服务</button>
+                        <button class="btn btn-sm btn-outline" data-cat="runtime" onclick="filterStore('runtime')">运行时</button>
+                        <button class="btn btn-sm btn-outline" data-cat="tool" onclick="filterStore('tool')">工具</button>
+                    </div>
+                </div>
+                <div class="store-grid" id="store-grid"></div>
+            </div>
+
             <!-- 防火墙 -->
             <div id="page-firewall" class="page" style="display:none">
                 <div class="page-header">
@@ -211,6 +229,24 @@
                         <input type="password" id="confirm-password" placeholder="请再次输入新密码">
                     </div>
                     <button class="btn btn-primary" onclick="changePassword()">修改密码</button>
+                </div>
+                <div class="panel settings-panel">
+                    <h3>系统更新</h3>
+                    <div class="update-info">
+                        <div class="about-item">
+                            <span class="about-label">当前版本</span>
+                            <span class="about-value" id="current-version">--</span>
+                        </div>
+                        <div class="about-item">
+                            <span class="about-label">最新版本</span>
+                            <span class="about-value" id="latest-version">--</span>
+                        </div>
+                    </div>
+                    <div id="update-changelog" class="update-changelog" style="display:none"></div>
+                    <div style="margin-top:12px">
+                        <button class="btn btn-outline" onclick="checkUpdate()">检查更新</button>
+                        <button class="btn btn-primary" id="btn-apply-update" style="display:none" onclick="applyUpdate()">立即更新</button>
+                    </div>
                 </div>
             </div>
 

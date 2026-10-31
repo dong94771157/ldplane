@@ -1,0 +1,14 @@
+.git
+.github
+.joycode
+.wrangler
+dist
+dist-test
+data
+*.exe
+*.md
+Dockerfile
+.dockerignore
+install.sh
+ldplane
+ldplane-linux-*

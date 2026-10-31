@@ -9,7 +9,7 @@ import (
 	"github.com/ldplane/ldplane/internal/config"
 )
 
-var version = "dev"
+var version = "1.0.1"
 
 func setGinMode(mode string) {
 	gin.SetMode(mode)
@@ -25,6 +25,9 @@ func main() {
 		ginMode = "debug"
 	}
 	setGinMode(ginMode)
+
+	// 同步版本号到 api 包
+	api.SetVersion(version)
 
 	// 设置路由
 	r := api.SetupRouter()

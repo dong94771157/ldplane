@@ -21,6 +21,7 @@ func SetupRouter() *gin.Engine {
 	{
 		// 无需认证
 		api.POST("/login", Login)
+		api.GET("/version", GetVersion)
 
 		// 需要认证
 		auth := api.Group("", middleware.AuthRequired())
@@ -68,6 +69,15 @@ func SetupRouter() *gin.Engine {
 			auth.GET("/process/list", ProcessList)
 			auth.POST("/process/kill", ProcessKill)
 			auth.GET("/process/port", PortList)
+
+			// 软件商店
+			auth.GET("/store/list", SoftList)
+			auth.POST("/store/install", SoftInstall)
+			auth.POST("/store/uninstall", SoftUninstall)
+
+			// 在线更新
+			auth.GET("/update/check", UpdateCheck)
+			auth.POST("/update/apply", UpdateApply)
 
 			// 终端
 			auth.GET("/terminal/ws", TerminalWS)

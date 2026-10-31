@@ -7,10 +7,13 @@
 - **仪表盘** - CPU / 内存 / 磁盘 / 网络实时监控，系统信息一览
 - **网站管理** - Nginx 站点创建 / 删除 / 启停 / 配置编辑
 - **文件管理** - 浏览 / 上传 / 下载 / 编辑 / 重命名 / 删除 / 压缩 / 新建目录
+- **软件商店** - MySQL / Redis / PostgreSQL / MongoDB 等一键安装 / 卸载
 - **服务管理** - systemd 服务列表 / 启动 / 停止 / 重启 / 重载
 - **防火墙** - ufw / firewalld 规则添加 / 删除
 - **进程管理** - 进程列表 / 结束进程 / 端口占用查看
 - **Web 终端** - 浏览器内 WebSocket 终端（仅 Linux）
+- **在线更新** - 面板内一键检查并更新到最新版本
+- **Docker 部署** - 提供 Dockerfile，支持容器化运行
 - **安全认证** - JWT Token + bcrypt 密码加密
 
 ## 快速开始
@@ -57,6 +60,24 @@ cd ldplane
 go build -o ldplane .
 ./ldplane
 ```
+
+### Docker 部署
+
+```bash
+# 构建镜像
+docker build -t ldplane:1.0.1 .
+
+# 运行容器
+docker run -d \
+  --name ldplane \
+  -p 8888:8888 \
+  -v ldplane-data:/etc/ldplane \
+  -v nginx-conf:/etc/nginx/conf.d \
+  --restart unless-stopped \
+  ldplane:1.0.1
+```
+
+> Docker 环境下服务管理（systemd）和防火墙功能受限，仪表盘、文件管理、软件商店、Web 终端等正常可用。
 
 ## 服务器部署（完整步骤）
 
@@ -159,8 +180,11 @@ certbot --nginx -d panel.example.com
 ### 7. 升级 / 卸载
 
 ```bash
-# 升级
-wget https://github.com/dong94771157/ldplane/releases/latest/download/ldplane-linux-amd64 -O /usr/local/bin/ldplane
+# 方式一：面板内在线更新（推荐）
+# 登录面板 → 设置 → 系统更新 → 检查更新 → 立即更新
+
+# 方式二：手动升级
+wget https://mb.ldnet.tech/ldplane-linux-amd64 -O /usr/local/bin/ldplane
 chmod +x /usr/local/bin/ldplane
 systemctl restart ldplane
 
