@@ -54,6 +54,9 @@
                 <a class="nav-item" data-page="settings" onclick="switchPage('settings')">
                     <span class="nav-icon">⚙</span> 设置
                 </a>
+                <a class="nav-item" data-page="about" onclick="switchPage('about')">
+                    <span class="nav-icon">ℹ</span> 关于我们
+                </a>
             </nav>
             <div class="sidebar-footer">
                 <button class="btn btn-sm btn-outline" onclick="doLogout()">退出登录</button>
@@ -208,6 +211,33 @@
                         <input type="password" id="confirm-password" placeholder="请再次输入新密码">
                     </div>
                     <button class="btn btn-primary" onclick="changePassword()">修改密码</button>
+                </div>
+            </div>
+
+            <!-- 关于我们 -->
+            <div id="page-about" class="page" style="display:none">
+                <h2 class="page-title">关于我们</h2>
+                <div class="panel about-panel">
+                    <div class="about-logo">琳东linux管理面板</div>
+                    <p class="about-desc">轻量级 Linux 服务器管理面板，单文件部署，开箱即用</p>
+                    <div class="about-info">
+                        <div class="about-item">
+                            <span class="about-label">QQ</span>
+                            <span class="about-value">94771157</span>
+                        </div>
+                        <div class="about-item">
+                            <span class="about-label">邮箱</span>
+                            <span class="about-value">ldnet2023@126.com</span>
+                        </div>
+                        <div class="about-item">
+                            <span class="about-label">网站</span>
+                            <span class="about-value"><a href="https://www.ldnet.tech" target="_blank">https://www.ldnet.tech</a></span>
+                        </div>
+                        <div class="about-item">
+                            <span class="about-label"></span>
+                            <span class="about-value"><a href="https://www.lindongwl.net.cn" target="_blank">https://www.lindongwl.net.cn</a></span>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

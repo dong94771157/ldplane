@@ -94,7 +94,7 @@ function switchPage(page) {
     const loaders = {
         dashboard: () => { loadDashboard(); dashboardTimer = setInterval(loadDashboard, 5000); },
         site: loadSites, file: () => loadFiles(currentPath), service: loadServices,
-        firewall: loadFirewall, process: loadProcess, terminal: initTerminal, settings: () => {}
+        firewall: loadFirewall, process: loadProcess, terminal: initTerminal, settings: () => {}, about: () => {}
     };
     if (loaders[page]) loaders[page]();
 }

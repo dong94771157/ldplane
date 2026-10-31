@@ -103,6 +103,17 @@ body { font-family: -apple-system, "Segoe UI", "Microsoft YaHei", sans-serif; ba
 /* 设置 */
 .settings-panel { max-width: 480px; }
 
+/* 关于我们 */
+.about-panel { max-width: 560px; text-align: center; padding: 40px 32px; }
+.about-logo { font-size: 26px; font-weight: bold; color: #667eea; margin-bottom: 10px; }
+.about-desc { color: #999; font-size: 14px; margin-bottom: 28px; }
+.about-info { text-align: left; display: inline-block; min-width: 360px; }
+.about-item { display: flex; align-items: center; padding: 12px 0; border-bottom: 1px solid #f0f0f0; }
+.about-label { width: 60px; color: #999; font-size: 14px; flex-shrink: 0; }
+.about-value { color: #333; font-size: 14px; }
+.about-value a { color: #667eea; text-decoration: none; }
+.about-value a:hover { text-decoration: underline; }
+
 /* 响应式 */
 @media (max-width: 768px) {
     .sidebar { width: 60px; }
