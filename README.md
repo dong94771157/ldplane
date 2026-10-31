@@ -39,6 +39,119 @@ go build -o ldplane .
 ./ldplane
 ```
 
+## 服务器部署（完整步骤）
+
+以下命令在 Linux 服务器上以 root 执行：
+
+### 1. 下载并安装
+
+```bash
+# 下载二进制（amd64 架构，arm64 请替换文件名）
+wget https://github.com/ldplane/ldplane/releases/latest/download/ldplane-linux-amd64 -O /usr/local/bin/ldplane
+chmod +x /usr/local/bin/ldplane
+
+# 创建配置目录
+mkdir -p /etc/ldplane
+```
+
+### 2. 创建 systemd 服务
+
+```bash
+cat > /etc/systemd/system/ldplane.service << 'EOF'
+[Unit]
+Description=LDPlane Server Management Panel
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/ldplane
+Restart=always
+RestartSec=5
+LimitNOFILE=65536
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl daemon-reload
+systemctl enable ldplane
+systemctl start ldplane
+```
+
+### 3. 查看状态与日志
+
+```bash
+systemctl status ldplane      # 查看运行状态
+journalctl -u ldplane -f      # 实时查看日志
+```
+
+### 4. 开放防火墙端口
+
+```bash
+# ufw
+ufw allow 8888/tcp
+
+# 或 firewalld
+firewall-cmd --permanent --add-port=8888/tcp
+firewall-cmd --reload
+```
+
+### 5. 访问面板
+
+浏览器打开 `http://服务器IP:8888`，默认账号 `admin` / `admin123`，**登录后立即修改密码**。
+
+### 6. （可选）Nginx 反向代理 + HTTPS
+
+```bash
+apt install nginx certbot python3-certbot-nginx -y   # Debian/Ubuntu
+
+cat > /etc/nginx/sites-available/ldplane << 'EOF'
+server {
+    listen 80;
+    server_name panel.example.com;
+
+    location / {
+        proxy_pass http://127.0.0.1:8888;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    # WebSocket 终端支持
+    location /api/terminal/ws {
+        proxy_pass http://127.0.0.1:8888;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+        proxy_read_timeout 86400;
+    }
+}
+EOF
+
+ln -sf /etc/nginx/sites-available/ldplane /etc/nginx/sites-enabled/
+nginx -t && systemctl reload nginx
+
+# 申请 HTTPS 证书
+certbot --nginx -d panel.example.com
+```
+
+### 7. 升级 / 卸载
+
+```bash
+# 升级
+wget https://github.com/ldplane/ldplane/releases/latest/download/ldplane-linux-amd64 -O /usr/local/bin/ldplane
+chmod +x /usr/local/bin/ldplane
+systemctl restart ldplane
+
+# 卸载
+systemctl stop ldplane && systemctl disable ldplane
+rm -f /usr/local/bin/ldplane /etc/systemd/system/ldplane.service
+rm -rf /etc/ldplane
+systemctl daemon-reload
+```
+
 ### 访问面板
 
 启动后访问 `http://服务器IP:8888`
