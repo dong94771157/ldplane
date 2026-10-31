@@ -30,7 +30,7 @@ func main() {
 	r := api.SetupRouter()
 
 	addr := fmt.Sprintf(":%d", cfg.Port)
-	log.Printf("LDPlane v%s 服务器管理面板启动中...", version)
+	log.Printf("琳东linux管理面板 v%s 启动中...", version)
 	log.Printf("监听地址: http://0.0.0.0%s", addr)
 	log.Printf("默认账号: %s (请及时修改密码)", cfg.Username)
 

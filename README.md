@@ -1,6 +1,6 @@
-# LDPlane - 轻量级 Linux 服务器管理面板
+# 琳东linux管理面板
 
-LDPlane 是一个类似宝塔面板的轻量级 Linux 服务器管理工具，使用 Go + Gin 开发，前端界面通过 `go:embed` 嵌入二进制，**单文件部署，开箱即用**。
+琳东linux管理面板是一个类似宝塔面板的轻量级 Linux 服务器管理工具，使用 Go + Gin 开发，前端界面通过 `go:embed` 嵌入二进制，**单文件部署，开箱即用**。
 
 ## 功能特性
 
@@ -59,7 +59,7 @@ mkdir -p /etc/ldplane
 ```bash
 cat > /etc/systemd/system/ldplane.service << 'EOF'
 [Unit]
-Description=LDPlane Server Management Panel
+Description=琳东linux管理面板
 After=network.target
 
 [Service]

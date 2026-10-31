@@ -440,7 +440,7 @@ function killProcess(pid) {
 // ==================== 终端 ====================
 function initTerminal() {
     const output = document.getElementById('terminal-output');
-    output.innerHTML = '<div style="color:#4ec9b0">LDPlane Web Terminal - 输入命令后按回车执行</div>\n';
+    output.innerHTML = '<div style="color:#4ec9b0">琳东linux管理面板 Web终端 - 输入命令后按回车执行</div>\n';
     const input = document.getElementById('terminal-input');
     input.value = '';
     input.focus();

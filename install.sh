@@ -1,5 +1,5 @@
 #!/bin/bash
-# LDPlane 一键安装脚本
+# 琳东linux管理面板 一键安装脚本
 # 用法: curl -fsSL https://raw.githubusercontent.com/ldplane/ldplane/main/install.sh | bash
 
 set -e
@@ -28,14 +28,14 @@ case "$ARCH" in
 esac
 
 echo "========================================"
-echo "  LDPlane 服务器管理面板 - 一键安装"
+echo "  琳东linux管理面板 - 一键安装"
 echo "========================================"
 echo "架构: $ARCH"
 echo "二进制: $BINARY"
 echo ""
 
 # 下载最新版本
-echo "[1/5] 下载 LDPlane ..."
+echo "[1/5] 下载 琳东linux管理面板 ..."
 DOWNLOAD_URL="https://github.com/${REPO}/releases/latest/download/${BINARY}"
 if command -v wget &> /dev/null; then
     wget -q --show-progress -O "${INSTALL_DIR}/ldplane" "$DOWNLOAD_URL"
@@ -56,7 +56,7 @@ mkdir -p "$CONFIG_DIR"
 echo "[3/5] 配置 systemd 服务 ..."
 cat > "$SERVICE_FILE" << EOF
 [Unit]
-Description=LDPlane Server Management Panel
+Description=琳东linux管理面板
 After=network.target
 
 [Service]
