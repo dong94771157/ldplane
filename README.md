@@ -21,11 +21,11 @@
 # 默认从 GitHub Releases 下载
 bash <(curl -sL https://raw.githubusercontent.com/dong94771157/ldplane/master/install.sh)
 
-# 使用自定义下载域名（国内镜像加速）
-bash <(curl -sL https://raw.githubusercontent.com/dong94771157/ldplane/master/install.sh) https://your-mirror.com/ldplane
+# 国内用户推荐：使用官方镜像加速
+bash <(curl -sL https://raw.githubusercontent.com/dong94771157/ldplane/master/install.sh) https://mb.ldnet.tech
 
 # 或通过环境变量指定
-export DOWNLOAD_BASE=https://your-mirror.com/ldplane
+export DOWNLOAD_BASE=https://mb.ldnet.tech
 bash <(curl -sL https://raw.githubusercontent.com/dong94771157/ldplane/master/install.sh)
 ```
 
@@ -36,11 +36,14 @@ bash <(curl -sL https://raw.githubusercontent.com/dong94771157/ldplane/master/in
 从 [Releases](../../releases) 页面下载对应架构的二进制文件：
 
 ```bash
-# amd64
+# amd64（GitHub）
 wget https://github.com/dong94771157/ldplane/releases/latest/download/ldplane-linux-amd64 -O ldplane
 
-# arm64
+# arm64（GitHub）
 wget https://github.com/dong94771157/ldplane/releases/latest/download/ldplane-linux-arm64 -O ldplane
+
+# 国内镜像（推荐）
+wget https://mb.ldnet.tech/ldplane-linux-amd64 -O ldplane
 
 chmod +x ldplane
 ./ldplane

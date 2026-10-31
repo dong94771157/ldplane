@@ -3,8 +3,8 @@
 #
 # 用法:
 #   1. 默认(GitHub下载):  curl -fsSL https://raw.githubusercontent.com/dong94771157/ldplane/master/install.sh | bash
-#   2. 自定义下载域名:    curl -fsSL https://raw.githubusercontent.com/dong94771157/ldplane/master/install.sh | bash -s -- https://www.ldnet.tech/dl
-#   3. 环境变量方式:      DOWNLOAD_BASE=https://www.ldnet.tech/dl bash install.sh
+#   2. 官方镜像(国内推荐): curl -fsSL https://raw.githubusercontent.com/dong94771157/ldplane/master/install.sh | bash -s -- https://mb.ldnet.tech
+#   3. 环境变量方式:      DOWNLOAD_BASE=https://mb.ldnet.tech bash install.sh
 #
 # 自定义域名目录下需放置以下文件:
 #   ldplane-linux-amd64  (x86_64架构二进制)
