@@ -1,0 +1,27 @@
+# Binaries
+ldplane
+ldplane.exe
+ldplane-linux-*
+dist/
+dist-test/
+
+# Go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Data
+data/

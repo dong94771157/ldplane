@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LDPlane - 服务器管理面板</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <!-- 登录页 -->
+    <div id="login-page" class="login-page">
+        <div class="login-box">
+            <h1>LDPlane</h1>
+            <p class="login-sub">Linux 服务器管理面板</p>
+            <div class="form-group">
+                <label>用户名</label>
+                <input type="text" id="login-username" placeholder="请输入用户名" value="admin">
+            </div>
+            <div class="form-group">
+                <label>密码</label>
+                <input type="password" id="login-password" placeholder="请输入密码">
+            </div>
+            <button class="btn btn-primary btn-block" onclick="doLogin()">登 录</button>
+        </div>
+    </div>
+
+    <!-- 主界面 -->
+    <div id="main-page" class="main-page" style="display:none">
+        <!-- 侧边栏 -->
+        <div class="sidebar">
+            <div class="sidebar-logo">LDPlane</div>
+            <nav class="sidebar-nav">
+                <a class="nav-item active" data-page="dashboard" onclick="switchPage('dashboard')">
+                    <span class="nav-icon">▣</span> 仪表盘
+                </a>
+                <a class="nav-item" data-page="site" onclick="switchPage('site')">
+                    <span class="nav-icon">◈</span> 网站管理
+                </a>
+                <a class="nav-item" data-page="file" onclick="switchPage('file')">
+                    <span class="nav-icon">▤</span> 文件管理
+                </a>
+                <a class="nav-item" data-page="service" onclick="switchPage('service')">
+                    <span class="nav-icon">◉</span> 服务管理
+                </a>
+                <a class="nav-item" data-page="firewall" onclick="switchPage('firewall')">
+                    <span class="nav-icon">⛉</span> 防火墙
+                </a>
+                <a class="nav-item" data-page="process" onclick="switchPage('process')">
+                    <span class="nav-icon">☰</span> 进程管理
+                </a>
+                <a class="nav-item" data-page="terminal" onclick="switchPage('terminal')">
+                    <span class="nav-icon">▶</span> 终端
+                </a>
+                <a class="nav-item" data-page="settings" onclick="switchPage('settings')">
+                    <span class="nav-icon">⚙</span> 设置
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="btn btn-sm btn-outline" onclick="doLogout()">退出登录</button>
+            </div>
+        </div>
+
+        <!-- 内容区 -->
+        <div class="content">
+            <!-- 仪表盘 -->
+            <div id="page-dashboard" class="page">
+                <h2 class="page-title">仪表盘</h2>
+                <div class="cards">
+                    <div class="card">
+                        <div class="card-title">CPU 使用率</div>
+                        <div class="card-value" id="cpu-percent">--</div>
+                        <div class="progress"><div class="progress-bar" id="cpu-bar"></div></div>
+                        <div class="card-sub" id="cpu-model">--</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">内存使用</div>
+                        <div class="card-value" id="mem-percent">--</div>
+                        <div class="progress"><div class="progress-bar" id="mem-bar"></div></div>
+                        <div class="card-sub" id="mem-detail">--</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">系统负载</div>
+                        <div class="card-value" id="load-val">--</div>
+                        <div class="card-sub" id="load-detail">--</div>
+                    </div>
+                    <div class="card">
+                        <div class="card-title">运行时间</div>
+                        <div class="card-value" id="uptime-val">--</div>
+                        <div class="card-sub" id="uptime-detail">--</div>
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="panel-header">磁盘使用</div>
+                    <table class="table" id="disk-table">
+                        <thead><tr><th>设备</th><th>挂载点</th><th>类型</th><th>总容量</th><th>已用</th><th>使用率</th></tr></thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="panel">
+                    <div class="panel-header">网络流量</div>
+                    <div class="cards">
+                        <div class="card"><div class="card-title">发送</div><div class="card-value" id="net-send">--</div></div>
+                        <div class="card"><div class="card-title">接收</div><div class="card-value" id="net-recv">--</div></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 网站管理 -->
+            <div id="page-site" class="page" style="display:none">
+                <div class="page-header">
+                    <h2 class="page-title">网站管理</h2>
+                    <button class="btn btn-primary" onclick="showSiteModal()">+ 添加网站</button>
+                </div>
+                <div class="panel">
+                    <table class="table">
+                        <thead><tr><th>名称</th><th>域名</th><th>端口</th><th>根目录</th><th>SSL</th><th>状态</th><th>操作</th></tr></thead>
+                        <tbody id="site-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 文件管理 -->
+            <div id="page-file" class="page" style="display:none">
+                <div class="page-header">
+                    <h2 class="page-title">文件管理</h2>
+                    <div>
+                        <button class="btn btn-sm btn-primary" onclick="showMkdirModal()">新建文件夹</button>
+                        <button class="btn btn-sm btn-primary" onclick="showUploadModal()">上传文件</button>
+                    </div>
+                </div>
+                <div class="file-path" id="file-path"></div>
+                <div class="panel">
+                    <table class="table">
+                        <thead><tr><th>名称</th><th>大小</th><th>权限</th><th>修改时间</th><th>操作</th></tr></thead>
+                        <tbody id="file-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 服务管理 -->
+            <div id="page-service" class="page" style="display:none">
+                <h2 class="page-title">服务管理</h2>
+                <div class="panel">
+                    <table class="table">
+                        <thead><tr><th>服务名</th><th>描述</th><th>状态</th><th>操作</th></tr></thead>
+                        <tbody id="service-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 防火墙 -->
+            <div id="page-firewall" class="page" style="display:none">
+                <div class="page-header">
+                    <h2 class="page-title">防火墙</h2>
+                    <button class="btn btn-primary" onclick="showFirewallModal()">+ 添加规则</button>
+                </div>
+                <div class="panel">
+                    <table class="table">
+                        <thead><tr><th>端口</th><th>协议</th><th>策略</th><th>操作</th></tr></thead>
+                        <tbody id="firewall-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 进程管理 -->
+            <div id="page-process" class="page" style="display:none">
+                <div class="page-header">
+                    <h2 class="page-title">进程管理</h2>
+                    <div>
+                        <button class="btn btn-sm btn-outline" onclick="loadProcess()">刷新</button>
+                    </div>
+                </div>
+                <div class="panel">
+                    <table class="table">
+                        <thead><tr><th>PID</th><th>名称</th><th>CPU%</th><th>内存%</th><th>用户</th><th>命令</th><th>操作</th></tr></thead>
+                        <tbody id="process-tbody"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 终端 -->
+            <div id="page-terminal" class="page" style="display:none">
+                <h2 class="page-title">终端</h2>
+                <div class="panel terminal-panel">
+                    <div id="terminal-output" class="terminal-output"></div>
+                    <div class="terminal-input-row">
+                        <span class="terminal-prompt">$</span>
+                        <input type="text" id="terminal-input" class="terminal-input" placeholder="输入命令..." autocomplete="off">
+                    </div>
+                </div>
+            </div>
+
+            <!-- 设置 -->
+            <div id="page-settings" class="page" style="display:none">
+                <h2 class="page-title">设置</h2>
+                <div class="panel settings-panel">
+                    <h3>修改密码</h3>
+                    <div class="form-group">
+                        <label>旧密码</label>
+                        <input type="password" id="old-password" placeholder="请输入旧密码">
+                    </div>
+                    <div class="form-group">
+                        <label>新密码</label>
+                        <input type="password" id="new-password" placeholder="请输入新密码(至少6位)">
+                    </div>
+                    <div class="form-group">
+                        <label>确认新密码</label>
+                        <input type="password" id="confirm-password" placeholder="请再次输入新密码">
+                    </div>
+                    <button class="btn btn-primary" onclick="changePassword()">修改密码</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 模态框 -->
+    <div id="modal-overlay" class="modal-overlay" style="display:none">
+        <div class="modal" id="modal-box"></div>
+    </div>
+
+    <!-- 提示消息 -->
+    <div id="toast" class="toast" style="display:none"></div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
