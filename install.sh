@@ -4,7 +4,7 @@
 
 set -e
 
-REPO="ldplane/ldplane"
+REPO="dong94771157/ldplane"
 INSTALL_DIR="/usr/local/bin"
 CONFIG_DIR="/etc/ldplane"
 SERVICE_FILE="/etc/systemd/system/ldplane.service"

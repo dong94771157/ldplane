@@ -21,10 +21,10 @@ LDPlane 是一个类似宝塔面板的轻量级 Linux 服务器管理工具，�
 
 ```bash
 # amd64
-wget https://github.com/ldplane/ldplane/releases/latest/download/ldplane-linux-amd64 -O ldplane
+wget https://github.com/dong94771157/ldplane/releases/latest/download/ldplane-linux-amd64 -O ldplane
 
 # arm64
-wget https://github.com/ldplane/ldplane/releases/latest/download/ldplane-linux-arm64 -O ldplane
+wget https://github.com/dong94771157/ldplane/releases/latest/download/ldplane-linux-arm64 -O ldplane
 
 chmod +x ldplane
 ./ldplane
@@ -33,7 +33,7 @@ chmod +x ldplane
 ### 从源码构建
 
 ```bash
-git clone https://github.com/ldplane/ldplane.git
+git clone https://github.com/dong94771157/ldplane.git
 cd ldplane
 go build -o ldplane .
 ./ldplane
@@ -47,7 +47,7 @@ go build -o ldplane .
 
 ```bash
 # 下载二进制（amd64 架构，arm64 请替换文件名）
-wget https://github.com/ldplane/ldplane/releases/latest/download/ldplane-linux-amd64 -O /usr/local/bin/ldplane
+wget https://github.com/dong94771157/ldplane/releases/latest/download/ldplane-linux-amd64 -O /usr/local/bin/ldplane
 chmod +x /usr/local/bin/ldplane
 
 # 创建配置目录
@@ -141,7 +141,7 @@ certbot --nginx -d panel.example.com
 
 ```bash
 # 升级
-wget https://github.com/ldplane/ldplane/releases/latest/download/ldplane-linux-amd64 -O /usr/local/bin/ldplane
+wget https://github.com/dong94771157/ldplane/releases/latest/download/ldplane-linux-amd64 -O /usr/local/bin/ldplane
 chmod +x /usr/local/bin/ldplane
 systemctl restart ldplane
 
